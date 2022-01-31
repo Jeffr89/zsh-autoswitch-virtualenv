@@ -1,5 +1,7 @@
 Autoswitch Python Virtualenv
 ============================
+VS Code Fix - Venv in same Folder
+------------
 
 |CircleCI| |Release| |GPLv3|
 
