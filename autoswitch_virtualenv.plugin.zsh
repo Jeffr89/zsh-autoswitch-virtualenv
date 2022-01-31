@@ -1,5 +1,7 @@
 export AUTOSWITCH_VERSION="3.4.0"
 export AUTOSWITCH_FILE=".venv"
+export AUTOSWITCH_VIRTUAL_ENV_DIR="venv"
+export VIRTUAL_ENV=""
 
 RED="\e[31m"
 GREEN="\e[32m"
