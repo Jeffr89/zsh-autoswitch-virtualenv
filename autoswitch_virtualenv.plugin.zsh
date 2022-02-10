@@ -1,6 +1,6 @@
 export AUTOSWITCH_VERSION="3.4.0"
 export AUTOSWITCH_FILE=".venv"
-export AUTOSWITCH_VIRTUAL_ENV_DIR="venv"
+export AUTOSWITCH_VIRTUAL_ENV_DIR="."
 export VIRTUAL_ENV=""
 
 RED="\e[31m"
@@ -321,7 +321,9 @@ function mkvenv()
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
         else
-            local venv_name="$(basename $PWD)-$(randstr)"
+            # local venv_name="$(basename $PWD)-$(randstr)"
+            local venv_name="venv"
+
 
             printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
