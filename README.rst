@@ -58,6 +58,9 @@ same name as the current directory but can be edited if needed). There
 is then a precommand hook that looks for a ``.venv`` file and switches
 to the name specified if one is found.
 
+Autoswitch virtualenv also works automatically with projects which contains
+a ``.venv`` virtualenv directly created by the ``python -m venv`` command.
+
 For the case of pipenv projects, the plugin will look for a ``Pipfile``
 and activates pipenv if it detects an existing virtual environment for it.
 
@@ -71,6 +74,7 @@ Installing
 ----------
 
 ``autoswitch-virtualenv`` requires `virtualenv <https://pypi.org/project/virtualenv/>`__ to be installed.
+You will also need to make sure that ``python`` (without a suffix; both Python 2 and 3 are supported) is available in your ``$PATH``.
 
 Once ``virtualenv`` is installed, add one of the following lines to your ``.zshrc`` file depending on the
 package manager you are using:
@@ -92,6 +96,14 @@ Zgen_
 ::
 
     zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
+
+Fig_
+
+Install ``zsh-autoswitch-virtualenv`` with Fig in just one click.
+
+.. image:: https://fig.io/badges/install-with-fig.svg
+  :target: https://fig.io/plugins/other/zsh-autoswitch-virtualenv_MichaelAquilina
+  :alt: Install with Fig
 
 oh-my-zsh_
 
@@ -266,8 +278,8 @@ the mkvenv command.
 
 **Autoswitch file name**
 
-By default, the `.venv` file is searched for in each directory in order to tell if
-a virtualenv should be automatically activated.
+By default, the `.venv` file (or virtualenv directory) is searched for in each
+directory in order to tell if a virtualenv should be automatically activated.
 
 If this needs to be changed (e.g. it conflicts with something else) then it may be
 changed by setting the value of ``AUTOSWITCH_FILE``. For example:
@@ -312,10 +324,9 @@ then you can set the variable to use a relative path. For example:
 
 **Customising pip install invocation**
 
-By default `mkvenv` will install setup.py via pip in editable (i.e. development) mode. See
-`here <http://codumentary.blogspot.com/2014/11/python-tip-of-year-pip-install-editable.html/>`__
-and `here <https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs/>`__ for
-further information. To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
+By default `mkvenv` will install setup.py via pip in `editable (i.e. development) mode
+<https://pip.pypa.io/en/stable/cli/pip_install/#editable-installs>`__.
+To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
 
 Security Warnings
 -----------------
@@ -358,6 +369,8 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 .. _Antigen: https://github.com/zsh-users/antigen
 
 .. _ZGen: https://github.com/tarjoilija/zgen
+
+.. _Fig: https://fig.io
 
 .. _oh-my-zsh: https://github.com/robbyrussell/oh-my-zsh
 

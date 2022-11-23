@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="3.4.0"
+export AUTOSWITCH_VERSION="3.6.0"
 export AUTOSWITCH_FILE=".venv"
 export AUTOSWITCH_VIRTUAL_ENV_DIR="."
 export VIRTUAL_ENV=""
@@ -123,7 +123,7 @@ function _check_path()
 {
     local check_dir="$1"
 
-    if [[ -f "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
+    if [[ -e "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
         printf "${check_dir}/${AUTOSWITCH_FILE}"
         return
     elif [[ -f "${check_dir}/poetry.lock" ]]; then
@@ -182,11 +182,11 @@ function check_venv()
             file_permissions="$(/usr/bin/stat -f %OLp "$venv_path")"
         fi
 
-        if [[ "$file_owner" != "$(id -u)" ]]; then
+        if [[ -f "$venv_path" ]] && [[ "$file_owner" != "$(id -u)" ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
             printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
-        elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
+        elif [[ -f "$venv_path" ]] && ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
             printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
@@ -199,9 +199,14 @@ function check_venv()
                 if type "poetry" > /dev/null && _activate_poetry; then
                     return
                 fi
-            else
+            # standard use case: $venv_path is a file containing a virtualenv name
+            elif [[ -f "$venv_path" ]]; then
                 local switch_to="$(<"$venv_path")"
                 _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"
+                return
+            # $venv_path actually is itself a virtualenv
+            elif [[ -d "$venv_path" ]] && [[ -f "$venv_path/bin/activate" ]]; then
+                _maybeworkon "$venv_path" "virtualenv"
                 return
             fi
         fi
@@ -412,5 +417,10 @@ function _autoswitch_startup() {
     check_venv
 }
 
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd _autoswitch_startup
+if ! type "python" > /dev/null; then
+    printf "WARNING: python binary not found on PATH.\n"
+    printf "zsh-autoswitch-virtualenv plugin will be disabled.\n"
+else
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd _autoswitch_startup
+fi
