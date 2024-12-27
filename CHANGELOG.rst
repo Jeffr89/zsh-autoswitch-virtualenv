@@ -1,6 +1,14 @@
 Changelog
 =========
 
+3.7.1
+-----
+* only check python on precmd. Fixes issues with plugins like pyenv that load in PATH later to work correctly (#175)
+
+3.7.0
+-----
+* Fix an issue where .virtualenv dirs where created when not needed (#194 thanks @Mejituu)
+
 3.6.0
 ------
 * Display warning in terminal if python is not in PATH
